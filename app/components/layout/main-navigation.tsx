@@ -1,5 +1,8 @@
 "use client";
+import Image from "next/image";
 import { useState } from "react";
+import logoPicture from '../../../public/te-transparent-noshadows.webp'
+import Link from "next/link";
 
 function MainNavigation() {
   const [isOpenLoginForm, setIsOpenLoginForm] = useState<boolean>(false);
@@ -16,11 +19,13 @@ function MainNavigation() {
               className="mx-2 my-1 flex items-center text-neutral-900 hover:text-neutral-900 focus:text-neutral-900 lg:mb-0 lg:mt-0"
               href="#"
             >
-              <img
+              <Image
                 className="mr-2 h-5"
-                src="https://tecdn.b-cdn.net/img/logo/te-transparent-noshadows.webp"
+                src={logoPicture}
                 alt="TE Logo"
                 loading="lazy"
+                width={0}
+                height={20}
               />
             </a>
           </div>
@@ -80,6 +85,7 @@ function MainNavigation() {
             </ul>
 
             <div className="flex items-center">
+            <Link href='/auth/login'>
               <button
                 type="button"
                 data-te-ripple-init
@@ -89,6 +95,8 @@ function MainNavigation() {
               >
                 Login
               </button>
+              </Link>
+              <Link href='/auth/signup'>
               <button
                 type="button"
                 data-te-ripple-init
@@ -97,6 +105,7 @@ function MainNavigation() {
               >
                 Sign up for free
               </button>
+              </Link>
               <button
                 type="button"
                 data-te-ripple-init
