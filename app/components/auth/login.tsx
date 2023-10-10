@@ -1,23 +1,28 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { FormEvent, useState } from "react";
 import LoginImage from '../../../public//draw2.svg'
+import { signIn } from "next-auth/react";
 
 function LoginForm() {
-  const [isLogin, setIsLogin] = useState<boolean>(true);
-  const emailInputRef = useRef<HTMLInputElement>(null);
-  const passwordInputRef = useRef<HTMLInputElement>(null);
+  // const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [userInfo, setUserInfo] = useState({
+    email: "",
+    password: "",
+  });
 
 
-  function switchAuthModeHandler() {
-    setIsLogin((prevState) => !prevState);
-  }
+  const submitHandler = async (event: FormEvent) => {
+    event.preventDefault();
 
+    const result = await signIn("credentials", {
+      email: userInfo.email,
+      password: userInfo.password,
+      redirect: false,
+    });
 
-  function submitHandler () {
-    const enteredEmail = emailInputRef.current!.value;
-    const enteredPassword = passwordInputRef.current!.value;
+    console.log(result);
   }
 
 
@@ -47,6 +52,8 @@ function LoginForm() {
                   className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                   id="exampleFormControlInput3"
                   placeholder="Email address"
+                  value={userInfo.email}
+                  onChange={({target}) => setUserInfo({...userInfo, email: target.value})}
                 />
                 <label
                   htmlFor="exampleFormControlInput3"
@@ -62,7 +69,9 @@ function LoginForm() {
                   type="password"
                   className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                   id="exampleFormControlInput33"
-                  placeholder="Password"
+                  placeholder="Password" 
+                  value={userInfo.password}
+                  onChange={({target}) => setUserInfo({...userInfo, password: target.value})}
                 />
                 <label
                   htmlFor="exampleFormControlInput33"
@@ -80,6 +89,7 @@ function LoginForm() {
                     type="checkbox"
                     value=""
                     id="exampleCheck3"
+                    onChange={() => console.log('Clicked')}
                     checked
                   />
                   <label
