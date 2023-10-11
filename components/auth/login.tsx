@@ -9,15 +9,20 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { FormEvent } from 'react';
+import { signIn } from 'next-auth/react';
 
 function LoginForm() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+
+    const result = signIn('credentials', {
       email: data.get('email'),
       password: data.get('password'),
+      redirect: false,
     });
+
+    console.log(result);
   };
 
   return (

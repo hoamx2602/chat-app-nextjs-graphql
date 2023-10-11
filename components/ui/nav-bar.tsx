@@ -14,14 +14,14 @@ import Menu from '@mui/material/Menu';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 export default function MenuAppBar() {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const { data: session, status } = useSession();
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAuth(event.target.checked);
-  };
+  console.log(session);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -33,18 +33,6 @@ export default function MenuAppBar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      {/* <FormGroup>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={auth}
-              onChange={handleChange}
-              aria-label="login switch"
-            />
-          }
-          label={auth ? 'Logout' : 'Login'}
-        />
-      </FormGroup> */}
       <AppBar position="static">
         <Toolbar>
           <IconButton
@@ -60,21 +48,25 @@ export default function MenuAppBar() {
             Photos
           </Typography>
           <Stack direction="row" spacing={2}>
-            <Link href="/auth/login">
-              <Button color="secondary" variant="contained">
-                Login
-              </Button>
-            </Link>
-            <Link href="/auth/signup">
-              <Button variant="contained" color="success">
-                Sign Up
-              </Button>
-            </Link>
+            {!session && (
+              <Link href="/auth/login">
+                <Button color="secondary" variant="contained">
+                  Login
+                </Button>
+              </Link>
+            )}
+            {!session && status !== 'loading' && (
+              <Link href="/auth/signup">
+                <Button variant="contained" color="success">
+                  Sign Up
+                </Button>
+              </Link>
+            )}
             <Button variant="outlined" href="#outlined-buttons">
               Link
             </Button>
           </Stack>
-          {auth && (
+          {session && (
             <div>
               <IconButton
                 size="large"
