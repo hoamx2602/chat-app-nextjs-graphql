@@ -1,9 +1,7 @@
-import SignUpForm from "@/app/components/auth/signup";
+import SignUpForm from '@/components/auth/signup';
 
 function SignUpPage() {
-    return ( 
-        <SignUpForm/>
-     );
+  return <SignUpForm />;
 }
 
 export default SignUpPage;
