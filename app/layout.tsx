@@ -1,5 +1,3 @@
-
-
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -23,10 +21,9 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body className={inter.className} suppressHydrationWarning={true}>
-          <Provider session={session}>
-            <MainNavigation />
-            {children}
-          </Provider>
+        <Provider session={session}>
+          <MainNavigation children={children} />
+        </Provider>
       </body>
     </html>
   );

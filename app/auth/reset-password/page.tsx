@@ -1,30 +1,4 @@
-'use client';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { FormEvent } from 'react';
-import { signIn } from 'next-auth/react';
-
-function LoginForm() {
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-
-    const result = signIn('credentials', {
-      email: data.get('email'),
-      password: data.get('password'),
-      redirect: false,
-    });
-
-    console.log(result);
-  };
-
+function ResetPasswordPage() {
   return (
     <div className="flex flex-col items-center justify-center px-6 pt-8 mx-auto md:h-screen pt:mt-0 dark:bg-gray-900">
       <a
@@ -35,9 +9,9 @@ function LoginForm() {
         <span>Flowbite</span>
       </a>
       {/* Card */}
-      <div className="w-full max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow dark:bg-gray-800">
+      <div className="w-full max-w-xl p-6 space-y-8 bg-white rounded-lg shadow sm:p-8 dark:bg-gray-800">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Sign in to platform
+          Reset your password
         </h2>
         <form className="mt-8 space-y-6" action="#">
           <div>
@@ -61,12 +35,28 @@ function LoginForm() {
               htmlFor="password"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Your password
+              New password
             </label>
             <input
               type="password"
               name="password"
               id="password"
+              placeholder="••••••••"
+              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              required
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="confirm-password"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Confirm New Password
+            </label>
+            <input
+              type="password"
+              name="confirm-password"
+              id="confirm-password"
               placeholder="••••••••"
               className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               required
@@ -88,32 +78,26 @@ function LoginForm() {
                 htmlFor="remember"
                 className="font-medium text-gray-900 dark:text-white"
               >
-                Remember me
+                I accept the{' '}
+                <a
+                  href="#"
+                  className="text-primary-700 hover:underline dark:text-primary-500"
+                >
+                  Terms and Conditions
+                </a>
               </label>
             </div>
-            <a
-              href="#"
-              className="ml-auto text-sm text-primary-700 hover:underline dark:text-primary-500"
-            >
-              Lost Password?
-            </a>
           </div>
           <button
             type="submit"
-            className="w-full px-5 py-3 text-base font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 sm:w-auto dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+            className="w-full px-5 py-3 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 sm:w-auto dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
           >
-            Login to your account
+            Reset password
           </button>
-          <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
-            Not registered?{' '}
-            <a className="text-primary-700 hover:underline dark:text-primary-500">
-              Create account
-            </a>
-          </div>
         </form>
       </div>
     </div>
   );
 }
 
-export default LoginForm;
+export default ResetPasswordPage;
