@@ -1,4 +1,5 @@
 "use client";
+
 import { useSession } from "next-auth/react";
 import MenuAppBar from "../ui/nav-bar";
 import { usePathname } from "next/navigation";
@@ -11,7 +12,15 @@ function MainNavigation() {
 
   console.log(session);
 
-  return <Fragment>{pathname !== "/auth/login" && <MenuAppBar />}</Fragment>;
+  if (pathname === "/auth/login" || pathname === "/auth/signup") {
+    return;
+  }
+
+  return (
+    <Fragment>
+      <MenuAppBar />
+    </Fragment>
+  );
 }
 
 export default MainNavigation;
