@@ -1,10 +1,11 @@
+
+
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import MainNavigation from '../components/layout/main-navigation';
 import { getServerSession } from 'next-auth';
 import Provider from '../components/providers/session-provider';
-import ThemeRegistry from '@/components/theme/theme-registry';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,12 +23,10 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body className={inter.className} suppressHydrationWarning={true}>
-        <ThemeRegistry>
           <Provider session={session}>
             <MainNavigation />
             {children}
           </Provider>
-        </ThemeRegistry>
       </body>
     </html>
   );
