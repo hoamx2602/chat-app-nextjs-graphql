@@ -31,6 +31,24 @@ const handler = NextAuth({
   pages: {
     signIn: '/auth/login',
   },
+  callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      console.log('DEBUG=================profile, email, credentials', profile, email, credentials);
+      const isAllowedToSignIn = true
+      if (isAllowedToSignIn) {
+        return true
+      } else {
+        // Return false to display a default error message
+        return false
+        // Or you can return a URL to redirect to:
+        // return '/unauthorized'
+      }
+    },
+    async redirect({url, baseUrl}) {
+      console.log('DEBUG=================baseUrl', baseUrl);
+      return baseUrl;
+    }
+  }
 });
 
 export { handler as GET, handler as POST };

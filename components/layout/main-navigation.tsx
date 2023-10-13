@@ -21,7 +21,9 @@ function MainNavigation(props: PropsWithChildren) {
     pathname === '/auth/forgot-password' ||
     pathname === '/auth/profile-lock'
   ) {
-    return;
+    return (
+      <div>{props.children}</div>
+    )
   }
 
   return (

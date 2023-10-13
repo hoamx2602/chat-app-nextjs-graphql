@@ -1,28 +1,20 @@
 'use client';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { FormEvent } from 'react';
 import { signIn } from 'next-auth/react';
+import { redirect } from 'next/navigation';
+import { FormEvent } from 'react';
 
 function LoginForm() {
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    const result = signIn('credentials', {
+    const result = await signIn('credentials', {
       email: data.get('email'),
       password: data.get('password'),
-      redirect: false,
     });
 
-    console.log(result);
+    redirect('/auth/signup')
+
   };
 
   return (
@@ -39,7 +31,7 @@ function LoginForm() {
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
           Sign in to platform
         </h2>
-        <form className="mt-8 space-y-6" action="#">
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit} action="#">
           <div>
             <label
               htmlFor="email"
