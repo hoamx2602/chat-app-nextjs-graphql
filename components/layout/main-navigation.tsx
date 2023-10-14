@@ -12,8 +12,6 @@ function MainNavigation(props: PropsWithChildren) {
 
   const { data: session, status } = useSession();
 
-  console.log(session);
-
   if (
     pathname === '/auth/login' ||
     pathname === '/auth/signup' ||

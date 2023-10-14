@@ -1,19 +1,39 @@
 'use client';
+import { LOGIN_USER } from '@/helpers/gql.request';
+import { useMutation } from '@apollo/client';
 import { signIn } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import { FormEvent } from 'react';
 
 function LoginForm() {
+
+
+  const [login] = useMutation(LOGIN_USER);
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    const result = await signIn('credentials', {
-      email: data.get('email'),
-      password: data.get('password'),
+    const response = await login({
+      variables: {
+        loginUserInput: {
+          email: data.get('email'),
+          password: data.get('password'),
+        }
+      },
+      onError: ({graphQLErrors}) => {
+        console.log(graphQLErrors)
+      }
+    })
+
+    const accessToken = response.data.loginUser.access_token;
+
+    const result = await signIn("credentials", {
+      jwt: accessToken,
+      redirect: false,
     });
 
-    redirect('/auth/signup')
+    // redirect('/auth/signup')
 
   };
 
