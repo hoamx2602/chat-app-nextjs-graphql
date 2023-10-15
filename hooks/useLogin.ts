@@ -1,7 +1,7 @@
 import { LOGIN_USER } from '@/helpers/gql.request';
 import { useMutation } from '@apollo/client';
 
-export interface CreateUserInput {
+export interface LoginUserInput {
   loginUserInput: {
     email: string;
     password: string;
@@ -11,9 +11,6 @@ export interface CreateUserInput {
 interface Token {
   access_token: string;
 }
-
-export const useLogin = (loginInput: CreateUserInput) => {
-  return useMutation<Token, CreateUserInput>(LOGIN_USER, {
-    variables: loginInput,
-  });
+export const useLogin = () => {
+  return useMutation<Token, LoginUserInput>(LOGIN_USER);
 };

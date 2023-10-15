@@ -1,39 +1,38 @@
 'use client';
 import { LOGIN_USER } from '@/helpers/gql.request';
+import { useLogin } from '@/hooks/useLogin';
 import { useMutation } from '@apollo/client';
-import { signIn } from 'next-auth/react';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { FormEvent } from 'react';
+import authenticatedVar from '../providers/authenticated';
+import client from '../providers/apollo-client';
 
 function LoginForm() {
-  const [login] = useMutation(LOGIN_USER);
+  const [loginUser] = useLogin();
+  const router = useRouter();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    const response = await login({
-      variables: {
-        loginUserInput: {
-          email: data.get('email'),
-          password: data.get('password'),
+    const email = data.get('email');
+    const password = data.get('password');
+    if (email !== null && password !== null) {
+      await loginUser({
+        variables: {
+          loginUserInput: {
+            email: email as string,
+            password: password as string,
+          },
         },
-      },
-      onError: ({ graphQLErrors }) => {
-        console.log(graphQLErrors);
-      },
-    });
+      });
+      client.refetchQueries({ include: 'active' });
+      authenticatedVar(true);
 
-    const accessToken = response.data.loginUser.access_token;
-    console.log(accessToken);
-
-    const result = await signIn('credentials', {
-      jwt: accessToken,
-      redirect: false,
-      callbackUrl: '/api/auth/login',
-    });
-
-    // redirect('/auth/signup')
+      router.push('/');
+    } else {
+      // Xử lý trường hợp email hoặc password là null (có thể thông báo lỗi hoặc xử lý khác)
+    }
   };
 
   return (

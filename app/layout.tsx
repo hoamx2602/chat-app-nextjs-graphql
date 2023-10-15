@@ -2,9 +2,11 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import MainNavigation from '../components/layout/main-navigation';
-import { getServerSession } from 'next-auth';
-import Provider from '../components/providers/session-provider';
+import { AuthProvider } from '@/components/providers/auth-provider';
+import { ApolloClient, ApolloProvider } from '@apollo/client';
+import client from '@/components/providers/apollo-client';
 import { ApolloProviderWrapper } from '@/components/providers/apollo-provider';
+import Guard from '@/components/guard/guard';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,15 +20,12 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession();
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body className={inter.className} suppressHydrationWarning={true}>
-        <Provider session={session}>
-          <ApolloProviderWrapper>
-            <MainNavigation>{children}</MainNavigation>
-          </ApolloProviderWrapper>
-        </Provider>
+        {/* <AuthProvider> */}
+        <ApolloProviderWrapper>{children}</ApolloProviderWrapper>
+        {/* </AuthProvider> */}
       </body>
     </html>
   );

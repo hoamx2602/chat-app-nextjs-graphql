@@ -1,27 +1,22 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
-import MenuAppBar from '../ui/nav-bar';
 import { usePathname } from 'next/navigation';
 import { Fragment, PropsWithChildren } from 'react';
-import SideBar from './sidebar';
 import Navbar from './navbar';
+import SideBar from './sidebar';
 
 function MainNavigation(props: PropsWithChildren) {
   const pathname = usePathname();
-
-  const { data: session, status } = useSession();
 
   if (
     pathname === '/auth/login' ||
     pathname === '/auth/signup' ||
     pathname === '/auth/reset-password' ||
     pathname === '/auth/forgot-password' ||
-    pathname === '/auth/profile-lock'
+    pathname === '/auth/profile-lock' ||
+    pathname === '/'
   ) {
-    return (
-      <div>{props.children}</div>
-    )
+    return <div>{props.children}</div>;
   }
 
   return (

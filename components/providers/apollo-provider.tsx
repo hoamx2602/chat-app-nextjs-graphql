@@ -1,39 +1,20 @@
 'use client';
 
-import { PropsWithChildren, useMemo } from 'react';
-import {
-  ApolloClient,
-  ApolloProvider,
-  HttpLink,
-  InMemoryCache,
-  from,
-} from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
-import { getSession } from 'next-auth/react';
+import { ApolloProvider } from '@apollo/client';
+import Guard from '../guard/guard';
+import MainNavigation from '../layout/main-navigation';
+import client from './apollo-client';
 
-const httpLink = new HttpLink({
-  uri: 'http://localhost:5000/graphql',
-});
+interface ProviderProps {
+  children: React.ReactNode;
+}
 
-export const ApolloProviderWrapper = ({ children }: PropsWithChildren) => {
-  const client = useMemo(() => {
-    const authMiddleware = setContext(async (operation, { headers }) => {
-      const session = await getSession();
-      console.log('DEBUG=================session', session);
-
-      return {
-        headers: {
-          ...headers,
-          authorization: `Bearer ${session}`,
-        },
-      };
-    });
-
-    return new ApolloClient({
-      link: from([authMiddleware, httpLink]),
-      cache: new InMemoryCache(),
-    });
-  }, []);
-
-  return <ApolloProvider client={client}>{children}</ApolloProvider>;
+export const ApolloProviderWrapper = ({ children }: ProviderProps) => {
+  return (
+    <ApolloProvider client={client}>
+      <Guard excludedRoutes={['/auth/login', '/auth/signup']}>
+        <MainNavigation>{children}</MainNavigation>
+      </Guard>
+    </ApolloProvider>
+  );
 };

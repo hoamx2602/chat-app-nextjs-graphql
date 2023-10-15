@@ -12,6 +12,15 @@ const nextConfig = {
   },
   env: {
     jwtSecret: process.env.NEXT_PUBLIC_JWT_SECRET,
+    apiURL: process.env.NEXT_PUBLIC_API_URL,
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${process.env.API_URL}/:path*`,
+      },
+    ];
   },
 };
 

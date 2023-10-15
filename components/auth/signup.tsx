@@ -1,16 +1,46 @@
-"use client";
+'use client';
 
-import { FormEvent } from "react";
+import { useRegister } from '@/hooks/useRegister';
+import { useMutation } from '@apollo/client';
+import { useRouter } from 'next/navigation';
+import { FormEvent, useState } from 'react';
 
 function SignUpForm() {
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const [error, setError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const router = useRouter();
+  const [registerUser] = useRegister();
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+
+    const email = data.get('email');
+    const password = data.get('password');
+    const confirmPassword = data.get('confirm-password');
+
+    if (email !== null && password !== null && confirmPassword === password) {
+      await registerUser({
+        variables: {
+          createUserInput: {
+            email: email as string,
+            password: password as string,
+          },
+        },
+        onError(error) {
+          setErrorMessage(error.graphQLErrors[0].message);
+          setError(true);
+        },
+      });
+    } else {
+      setError(true);
+      setErrorMessage('Please enter a valid email address');
+    }
   };
+
+  const errorClass = `mt-2 ${
+    !error ? 'hidden' : ''
+  } text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block`;
+
   return (
     <div className="flex flex-col items-center justify-center px-6 pt-8 mx-auto md:h-screen pt:mt-0 dark:bg-gray-900">
       <a
@@ -25,7 +55,7 @@ function SignUpForm() {
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
           Create a Free Account
         </h2>
-        <form className="mt-8 space-y-6" action="#">
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit} action="#">
           <div>
             <label
               htmlFor="email"
@@ -41,6 +71,8 @@ function SignUpForm() {
               placeholder="name@company.com"
               required
             />
+
+            <span className={errorClass}>{errorMessage}</span>
           </div>
           <div>
             <label
@@ -90,7 +122,7 @@ function SignUpForm() {
                 htmlFor="remember"
                 className="font-medium text-gray-900 dark:text-white"
               >
-                I accept the{" "}
+                I accept the{' '}
                 <a
                   href="#"
                   className="text-primary-700 hover:underline dark:text-primary-500"
@@ -107,7 +139,7 @@ function SignUpForm() {
             Create account
           </button>
           <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
-            Already have an account?{" "}
+            Already have an account?{' '}
             <a
               href="#"
               className="text-primary-700 hover:underline dark:text-primary-500"
