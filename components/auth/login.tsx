@@ -6,8 +6,6 @@ import { redirect } from 'next/navigation';
 import { FormEvent } from 'react';
 
 function LoginForm() {
-
-
   const [login] = useMutation(LOGIN_USER);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -19,22 +17,23 @@ function LoginForm() {
         loginUserInput: {
           email: data.get('email'),
           password: data.get('password'),
-        }
+        },
       },
-      onError: ({graphQLErrors}) => {
-        console.log(graphQLErrors)
-      }
-    })
+      onError: ({ graphQLErrors }) => {
+        console.log(graphQLErrors);
+      },
+    });
 
     const accessToken = response.data.loginUser.access_token;
+    console.log(accessToken);
 
-    const result = await signIn("credentials", {
+    const result = await signIn('credentials', {
       jwt: accessToken,
       redirect: false,
+      callbackUrl: '/api/auth/login',
     });
 
     // redirect('/auth/signup')
-
   };
 
   return (

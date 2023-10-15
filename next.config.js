@@ -11,7 +11,7 @@ const nextConfig = {
     ],
   },
   env: {
-    jwtSecret: process.env.NEXTAUTH_SECRET,
+    jwtSecret: process.env.NEXT_PUBLIC_JWT_SECRET,
   },
 };
 
