@@ -26,8 +26,8 @@ function SignUpForm() {
             password: password as string,
           },
         },
-        onError(error) {
-          setErrorMessage(error.graphQLErrors[0].message);
+        onError({ graphQLErrors }) {
+          setErrorMessage(graphQLErrors[0].message);
           setError(true);
         },
       });

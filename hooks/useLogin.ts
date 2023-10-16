@@ -12,5 +12,5 @@ interface Token {
   access_token: string;
 }
 export const useLogin = () => {
-  return useMutation<Token, LoginUserInput>(LOGIN_USER);
+  return useMutation<Token, LoginUserInput>(LOGIN_USER, { errorPolicy: 'all' });
 };

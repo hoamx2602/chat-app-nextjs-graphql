@@ -3,13 +3,15 @@ import { LOGIN_USER } from '@/helpers/gql.request';
 import { useLogin } from '@/hooks/useLogin';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/navigation';
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 import authenticatedVar from '../providers/authenticated';
 import client from '../providers/apollo-client';
 
 function LoginForm() {
-  const [loginUser] = useLogin();
+  const [loginUser, { error: gError, loading }] = useLogin();
   const router = useRouter();
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -17,23 +19,38 @@ function LoginForm() {
 
     const email = data.get('email');
     const password = data.get('password');
+
+    if (password!.length < 6) {
+      setError(true);
+      setErrorMessage('Password at least 6 characters');
+      return;
+    }
+
     if (email !== null && password !== null) {
-      await loginUser({
+      const result = await loginUser({
         variables: {
           loginUserInput: {
             email: email as string,
             password: password as string,
           },
         },
+        onError: ({ graphQLErrors }) => {
+          setError(true);
+          setErrorMessage(graphQLErrors[0].message);
+        },
       });
-      client.refetchQueries({ include: 'active' });
-      authenticatedVar(true);
 
-      router.push('/');
-    } else {
-      // Xử lý trường hợp email hoặc password là null (có thể thông báo lỗi hoặc xử lý khác)
+      if (!result.errors?.length) {
+        client.refetchQueries({ include: 'active' });
+        authenticatedVar(true);
+        router.push('/');
+      }
     }
   };
+
+  const errorClass = `mt-2 ${
+    !error ? 'hidden' : ''
+  } text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block`;
 
   return (
     <div className="flex flex-col items-center justify-center px-6 pt-8 mx-auto md:h-screen pt:mt-0 dark:bg-gray-900">
@@ -81,6 +98,7 @@ function LoginForm() {
               className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               required
             />
+            <span className={errorClass}>{errorMessage}</span>
           </div>
           <div className="flex items-start">
             <div className="flex items-center h-5">
